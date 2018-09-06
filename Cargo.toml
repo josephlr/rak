@@ -1,0 +1,23 @@
+cargo-features = ["edition"]
+
+[package]
+name = "uk"
+version = "0.1.0"
+authors = ["Joe Richey <joerichey@google.com>"]
+edition = "2018"
+
+[dependencies]
+bootloader_precompiled = "0.2.0"
+spin = "0.4.6"
+volatile = "0.2.3"
+x86_64 = "0.2.11"
+
+[dependencies.lazy_static]
+version = "1.0"
+features = ["spin_no_std"]
+
+[dev-dependencies]
+array-init = "0.0.4"
+
+[package.metadata.bootimage]
+default-target = "x86_64-uk.json"
