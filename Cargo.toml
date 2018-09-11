@@ -7,14 +7,13 @@ authors = ["Joe Richey <joerichey@google.com>"]
 edition = "2018"
 
 [dependencies]
-bootloader_precompiled = "0.2.0"
+bootloader = "0.3.1"
+# itertools = { version = "0.7.8", default-features = false }
+lazy_static = {version = "1.0", features = ["spin_no_std"] }
 spin = "0.4.6"
 volatile = "0.2.3"
 x86_64 = "0.2.11"
-
-[dependencies.lazy_static]
-version = "1.0"
-features = ["spin_no_std"]
+ux = {version = "0.1.2", default-features = false}
 
 [dev-dependencies]
 array-init = "0.0.4"

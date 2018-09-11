@@ -63,6 +63,7 @@ impl Serial {
         }
     }
 
+    #[allow(dead_code)]
     fn recv(&self) -> u8 {
         unsafe {
             while self.line_status.read() & 0x01 == 0 {}
@@ -70,6 +71,7 @@ impl Serial {
         }
     }
 
+    #[allow(dead_code)]
     pub fn echo(&mut self) {
         loop {
             let data = self.recv();
