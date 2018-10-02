@@ -1,5 +1,5 @@
 use spin::{Mutex, MutexGuard};
-use x86_64::instructions::hlt;
+use x86_64::instructions::{hlt, port::Port};
 
 #[macro_export]
 macro_rules! lock_write {
@@ -24,4 +24,12 @@ pub fn halt() -> ! {
     loop {
         hlt()
     }
+}
+
+// This is unsafe, because for this to work, QEMU must be run with:
+//    -device isa-debug-exit,iobase=0xf4,iosize=0x04
+#[allow(dead_code)]
+pub unsafe fn qemu_shutdown() -> ! {
+    Port::new(0xf4).write(0u32);
+    halt()
 }

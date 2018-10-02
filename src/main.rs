@@ -25,7 +25,7 @@ fn bootloader_main(info: &'static BootInfo) -> ! {
     }
     lock_writeln!(SCREEN, "Package = {:?}", info.package.deref());
 
-    util::halt()
+    unsafe { util::qemu_shutdown() }
 }
 
 #[cfg(not(test))]
