@@ -1,0 +1,15 @@
+[package]
+name = "rak"
+version = "0.1.0"
+authors = ["Joe Richey <joerichey94@gmail.com>"]
+edition = "2018"
+
+[dependencies]
+bootloader_precompiled = "0.3.0"
+
+[profile]
+dev = { panic = "abort" }
+release = { panic = "abort" }
+
+[package.metadata.bootimage]
+default-target = "x86_64-rak.json"
