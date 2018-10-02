@@ -82,7 +82,6 @@ impl Screen {
         }
     }
 
-    #[allow(dead_code)]
     pub fn set_font_color(&mut self, font_color: Color) {
         self.style = Style::new(font_color, Color::Black);
     }

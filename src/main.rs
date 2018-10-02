@@ -10,7 +10,6 @@ mod util;
 use bootloader_precompiled::{bootinfo::BootInfo, entry_point};
 use core::{fmt::Write, ops::Deref, panic::PanicInfo};
 use io::vga::{Color, SCREEN};
-use util::halt;
 
 fn bootloader_main(info: &'static BootInfo) -> ! {
     lock_writeln!(SCREEN, "P4 = 0x{:x}", info.p4_table_addr);
@@ -24,15 +23,9 @@ fn bootloader_main(info: &'static BootInfo) -> ! {
             region.region_type,
         );
     }
-    lock_writeln!(SCREEN, "Package = {:?}\n", info.package.deref());
+    lock_writeln!(SCREEN, "Package = {:?}", info.package.deref());
 
-    SCREEN.lock().set_font_color(Color::Magenta);
-    lock_write!(SCREEN, "Hello ");
-    SCREEN.lock().set_font_color(Color::LightBlue);
-    lock_write!(SCREEN, "World!");
-
-    panic!("OOPS");
-    halt()
+    util::halt()
 }
 
 #[cfg(not(test))]
@@ -41,7 +34,8 @@ entry_point!(bootloader_main);
 #[cfg(not(test))]
 #[panic_handler]
 fn panic(info: &PanicInfo) -> ! {
-    SCREEN.lock().set_font_color(Color::LightRed);
-    lock_writeln!(SCREEN, "\n\nKERNEL PANIC\n  {}", info);
-    halt()
+    let mut screen = unsafe { util::force_unwrap(&SCREEN) };
+    screen.set_font_color(Color::LightRed);
+    writeln!(screen, "\n\nKERNEL PANIC\n  {}", info);
+    util::halt()
 }
