@@ -4,6 +4,7 @@
 #![cfg_attr(test, allow(dead_code, unused_macros, unused_imports))]
 
 mod io;
+#[macro_use]
 mod util;
 
 use bootloader_precompiled::{bootinfo::BootInfo, entry_point};
@@ -12,24 +13,23 @@ use io::vga::{Color, SCREEN};
 use util::halt;
 
 fn bootloader_main(info: &'static BootInfo) -> ! {
-    writeln!(SCREEN.lock(), "P4 = 0x{:x}", info.p4_table_addr);
-    writeln!(SCREEN.lock(), "Memory Map:");
+    lock_writeln!(SCREEN, "P4 = 0x{:x}", info.p4_table_addr);
+    lock_writeln!(SCREEN, "Memory Map:");
     for region in info.memory_map.iter() {
-        writeln!(
-            SCREEN.lock(),
+        lock_writeln!(
+            SCREEN,
             "    [0x{:012x}, 0x{:012x}) - {:?}",
             region.range.start_addr(),
             region.range.end_addr(),
             region.region_type,
         );
     }
-    writeln!(SCREEN.lock(), "Package = {:?}", info.package.deref());
-    writeln!(SCREEN.lock());
+    lock_writeln!(SCREEN, "Package = {:?}\n", info.package.deref());
 
     SCREEN.lock().set_font_color(Color::Magenta);
-    write!(SCREEN.lock(), "Hello ");
+    lock_write!(SCREEN, "Hello ");
     SCREEN.lock().set_font_color(Color::LightBlue);
-    write!(SCREEN.lock(), "World!");
+    lock_write!(SCREEN, "World!");
 
     panic!("OOPS");
     halt()
@@ -42,6 +42,6 @@ entry_point!(bootloader_main);
 #[panic_handler]
 fn panic(info: &PanicInfo) -> ! {
     SCREEN.lock().set_font_color(Color::LightRed);
-    writeln!(SCREEN.lock(), "\n\nKERNEL PANIC\n  {}", info);
+    lock_writeln!(SCREEN, "\n\nKERNEL PANIC\n  {}", info);
     halt()
 }
