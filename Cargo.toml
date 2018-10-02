@@ -6,7 +6,13 @@ edition = "2018"
 
 [dependencies]
 bootloader_precompiled = "0.3.0"
+lazy_static = {version = "1.0", features = ["spin_no_std"] }
+spin = "0.4.6"
+volatile = "0.2.3"
 x86_64 = "0.2.11"
+
+[dev-dependencies]
+array-init = "0.0.4"
 
 [profile]
 dev = { panic = "abort" }
