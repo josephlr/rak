@@ -1,10 +1,13 @@
+#![feature(uniform_paths)]
 #![cfg_attr(not(test), no_std)]
 #![cfg_attr(not(test), no_main)]
 #![cfg_attr(test, allow(dead_code, unused_macros, unused_imports))]
 
-use core::panic::PanicInfo;
+mod util;
 
 use bootloader_precompiled::{bootinfo, entry_point};
+use core::panic::PanicInfo;
+use util::halt;
 
 fn bootloader_main(_info: &'static bootinfo::BootInfo) -> ! {
     let vga_buffer = 0xb8000 as *mut u8;
@@ -16,7 +19,7 @@ fn bootloader_main(_info: &'static bootinfo::BootInfo) -> ! {
         }
     }
 
-    loop {}
+    halt()
 }
 
 #[cfg(not(test))]
@@ -25,5 +28,5 @@ entry_point!(bootloader_main);
 #[cfg(not(test))]
 #[panic_handler]
 fn panic(_info: &PanicInfo) -> ! {
-    loop {}
+    halt()
 }
