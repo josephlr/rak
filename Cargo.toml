@@ -5,6 +5,8 @@ authors = ["Joe Richey <joerichey94@gmail.com>"]
 edition = "2018"
 
 [dependencies]
+bit_field = "0.9.0"
+bitflags = "1.0.4"
 bootloader_precompiled = "0.3.0"
 lazy_static = {version = "1.0", features = ["spin_no_std"] }
 spin = "0.4.6"
