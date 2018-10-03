@@ -3,6 +3,7 @@
 #![cfg_attr(not(test), no_main)]
 #![cfg_attr(test, allow(dead_code, unused_macros, unused_imports))]
 
+mod interrupts;
 mod io;
 #[macro_use]
 mod util;
