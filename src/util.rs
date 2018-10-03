@@ -20,6 +20,13 @@ pub unsafe fn force_unwrap<T>(m: &Mutex<T>) -> MutexGuard<T> {
     }
 }
 
+#[allow(dead_code)]
+pub fn port_wait(n: usize) {
+    for _ in 0..n {
+        unsafe { Port::new(0x80).write(0u8) }
+    }
+}
+
 pub fn halt() -> ! {
     loop {
         hlt()
