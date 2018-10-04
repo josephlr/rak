@@ -8,7 +8,7 @@ mod io;
 #[macro_use]
 mod util;
 
-use bootloader_precompiled::{bootinfo::BootInfo, entry_point};
+use bootloader::{bootinfo::BootInfo, entry_point};
 use core::{fmt::Write, ops::Deref, panic::PanicInfo};
 use io::pic8259::PICS;
 use io::vga::{Color, SCREEN};

@@ -7,7 +7,7 @@ edition = "2018"
 [dependencies]
 bit_field = "0.9.0"
 bitflags = "1.0.4"
-bootloader_precompiled = "0.3.0"
+bootloader = "0.3.2"
 lazy_static = {version = "1.0", features = ["spin_no_std"] }
 spin = "0.4.6"
 volatile = "0.2.3"
@@ -18,7 +18,7 @@ array-init = "0.0.4"
 
 [profile]
 dev = { panic = "abort" }
-release = { panic = "abort" }
+release = { panic = "abort", debug = false }
 
 [package.metadata.bootimage]
 default-target = "x86_64-rak.json"
