@@ -5,9 +5,10 @@ authors = ["Joe Richey <joerichey94@gmail.com>"]
 edition = "2018"
 
 [dependencies]
+slab_allocator = "0.3.5"
 bit_field = "0.9.0"
 bitflags = "1.0.4"
-bootloader = "0.3.2"
+bootloader = { git = "https://github.com/josephlr/bootloader", branch = "test" }
 lazy_static = {version = "1.0", features = ["spin_no_std"] }
 spin = "0.4.6"
 volatile = "0.2.3"
