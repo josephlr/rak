@@ -121,16 +121,18 @@ impl ChainedPics {
     }
 
     #[allow(dead_code)]
-    fn read_irr(&mut self) -> u16 {
+    pub fn read_irr(&mut self) -> u16 {
         unsafe { self.write_command((OCW3::ENABLE_READ | OCW3::MAND).bits) };
         self.read_command()
     }
 
-    fn read_isr(&mut self) -> u16 {
+    #[allow(dead_code)]
+    pub fn read_isr(&mut self) -> u16 {
         unsafe { self.write_command((OCW3::READ_ISR | OCW3::ENABLE_READ | OCW3::MAND).bits) };
         self.read_command()
     }
 
+    #[allow(dead_code)]
     pub fn read_imr(&self) -> u16 {
         unsafe { u16::from_le_bytes([self.master.data.read(), self.slave.data.read()]) }
     }
@@ -156,7 +158,6 @@ impl ChainedPics {
         self.irq(interrupt_id).is_some()
     }
 
-    #[allow(dead_code)]
     pub fn servicing_interrupt(&mut self, interrupt_id: u8) -> bool {
         match self.irq(interrupt_id) {
             Some(irq) => self.read_isr().get_bit(irq.into()),
@@ -164,7 +165,6 @@ impl ChainedPics {
         }
     }
 
-    #[allow(dead_code)]
     pub fn cleanup_interrupt(&mut self, interrupt_id: u8) {
         // Handle spurious interrupts
         let is_serviced = self.servicing_interrupt(interrupt_id);

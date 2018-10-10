@@ -42,14 +42,11 @@ fn bootloader_main(info: &'static BootInfo) -> ! {
     interrupts::init_gdt();
     interrupts::init_idt();
 
-    x86_64::instructions::int3();
-
-    PICS.lock().set_imr(0xffff);
+    PICS.lock().set_imr(0b1111_1111_1111_1100);
+    PICS.lock()
+        .remap(interrupts::PIC_START..interrupts::PIC_END);
     x86_64::instructions::interrupts::enable();
-    PICS.lock().remap(0x20..0x30);
 
-    SCREEN.lock().set_font_color(Color::White);
-    lock_writeln!(SCREEN, "We did not crash!");
     util::halt()
 }
 
