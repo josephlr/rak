@@ -1,10 +1,10 @@
 extern crate alloc;
 
-use alloc::boxed::Box;
-use core::{fmt::Write, mem::size_of};
 use crate::io::pic8259::PICS;
 use crate::io::vga::{Color, SCREEN};
 use crate::memory::Page;
+use alloc::boxed::Box;
+use core::{fmt::Write, mem::size_of};
 use lazy_static::lazy_static;
 use x86_64::{
     instructions::{port::Port, segmentation::set_cs, tables::load_tss},
