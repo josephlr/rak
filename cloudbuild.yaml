@@ -1,0 +1,28 @@
+timeout: 600s
+
+steps:
+- name: mirror.gcr.io/library/golang:1.12
+  id: "build"
+  args: ["go","build","./..."]
+
+- name: mirror.gcr.io/library/golang:1.12
+  id: "test"
+  args: ["go","test","-v","./..."]
+
+- name: mirror.gcr.io/library/golang:1.13
+  id: "build"
+  args: ["go","build","./..."]
+
+- name: mirror.gcr.io/library/golang:1.13
+  id: "test"
+  args: ["go","test","-v","./..."]
+
+options:
+  # We will always use Go Modules
+  env:
+  - GO111MODULE=on
+  - GOPROXY=https://proxy.golang.org
+  # Keep the module cached between builds
+  volumes:
+  - name: go-modules
+    path: /go
