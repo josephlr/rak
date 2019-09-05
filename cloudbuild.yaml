@@ -2,11 +2,11 @@ timeout: 600s
 
 steps:
 - name: mirror.gcr.io/library/golang:1.12
-  id: "build"
+  id: "build 1.12"
   args: ["go","build","./..."]
 
 - name: mirror.gcr.io/library/golang:1.12
-  id: "test"
+  id: "test 1.12"
   args: ["go","test","-v","./..."]
 
 - name: mirror.gcr.io/library/golang:1.13
