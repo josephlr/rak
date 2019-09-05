@@ -6,9 +6,8 @@ env:
   GO111MODULE: on
 
 test_task:
-  # modules_cache:
-  #   fingerprint_script: cat go.sum
-  #   folder: $GOPATH/pkg/mod
-  get_script: go get ./...
+  modules_cache:
+    fingerprint_script: cat go.sum
+    folder: $GOPATH/pkg/mod
   build_script: go build ./...
-  test_script: go test ./...
+  test_script: go test -v ./...
