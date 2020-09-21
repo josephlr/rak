@@ -1,22 +1,25 @@
-cargo-features = ["edition"]
-
 [package]
 name = "uk"
 version = "0.1.0"
 authors = ["Joe Richey <joerichey@google.com>"]
 edition = "2018"
 
+[profile.dev]
+panic = "abort"
+
+[profile.release]
+opt-level = 's'
+debug = false
+debug-assertions = false
+overflow-checks = false
+lto = 'fat'
+panic = 'abort'
+incremental = false
+codegen-units = 1
+rpath = false
+
 [dependencies]
-bootloader = "0.3.1"
-# itertools = { version = "0.7.8", default-features = false }
-lazy_static = {version = "1.0", features = ["spin_no_std"] }
-spin = "0.4.6"
-volatile = "0.2.3"
-x86_64 = "0.2.11"
-ux = {version = "0.1.2", default-features = false}
-
-[dev-dependencies]
-array-init = "0.0.4"
-
-[package.metadata.bootimage]
-default-target = "x86_64-uk.json"
+getrandom = { version = "0.2", features = ["rdrand"] }
+uart_16550 = "0.2.7"
+x86_64 = { path = "../x86_64" }
+bitflags = "1.2"
