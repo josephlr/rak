@@ -36,6 +36,16 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f2f96b10ec2560088a8e76961b00d47107b3a625fecb76dedb29ee7ccbf98235"
 
 [[package]]
+name = "rak"
+version = "0.1.0"
+dependencies = [
+ "bitflags",
+ "getrandom",
+ "uart_16550",
+ "x86_64 0.11.7",
+]
+
+[[package]]
 name = "uart_16550"
 version = "0.2.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -43,16 +53,6 @@ checksum = "e58fc40dc1712664fc9b0a7bd8ca2f21ab49960924fb245a80a05e1e92f3dfe9"
 dependencies = [
  "bitflags",
  "x86_64 0.11.7 (registry+https://github.com/rust-lang/crates.io-index)",
-]
-
-[[package]]
-name = "uk"
-version = "0.1.0"
-dependencies = [
- "bitflags",
- "getrandom",
- "uart_16550",
- "x86_64 0.11.7",
 ]
 
 [[package]]

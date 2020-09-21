@@ -1,6 +1,6 @@
 //! Test the public interface to the library
 use std::{io::{Stdout, stdout, Write}};
-use uk::Plat;
+use rak::Plat;
 
 struct Hosted(Stdout);
 

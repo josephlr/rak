@@ -5,7 +5,7 @@
 
 use core::{fmt::Write, panic::PanicInfo};
 use uart_16550::SerialPort;
-use uk::Plat;
+use rak::Plat;
 
 /// Workaround for https://github.com/rust-lang/cargo/issues/6784
 /// Running "cargo test" or "cargo build" for the host target will try to build

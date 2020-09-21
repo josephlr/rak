@@ -13,7 +13,7 @@ fn get_kernel_path() -> impl AsRef<Path> {
     let bin_dir = env_comps.next_back().unwrap();
     let mut pathbuf = env_comps.as_path().to_path_buf();
 
-    pathbuf.push("x86_64-none-uk");
+    pathbuf.push("x86_64-none-rak");
     pathbuf.push(bin_dir);
     pathbuf.push(bin_name);
     pathbuf

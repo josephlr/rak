@@ -1,5 +1,5 @@
 [package]
-name = "uk"
+name = "rak"
 version = "0.1.0"
 authors = ["Joe Richey <joerichey@google.com>"]
 edition = "2018"
