@@ -1,6 +1,6 @@
-#![cfg_attr(not(test), no_std)]
-#![cfg_attr(not(test), no_main)]
-#![cfg_attr(test, allow(unused_imports, dead_code))]
+#![cfg_attr(target_os = "none", no_std)]
+#![cfg_attr(target_os = "none", no_main)]
+#![cfg_attr(not(target_os = "none"), allow(unused_imports, dead_code))]
 #![feature(asm, naked_functions)]
 
 use core::{fmt::Write, panic::PanicInfo};
@@ -10,13 +10,12 @@ use rak::Plat;
 /// Workaround for https://github.com/rust-lang/cargo/issues/6784
 /// Running "cargo test" or "cargo build" for the host target will try to build
 /// this binary for the host target. For that, we need a main function.
-#[cfg(not(any(test, target_os = "none")))]
-#[export_name = "main"]
-pub extern "C" fn fake_main() -> i32 { 0 }
+#[cfg(not(target_os = "none"))]
+pub fn main() {}
 
 mod pvh;
 
-#[cfg_attr(not(test), panic_handler)]
+#[cfg_attr(target_os = "none", panic_handler)]
 fn panic(_: &PanicInfo) -> ! {
     static FOO: usize = 0;
     loop {
@@ -41,10 +40,13 @@ impl Plat for BareMetal {
     }
 }
 
-#[no_mangle]
-pub extern "C" fn rust64_start() {
-    let mut plat = BareMetal::new(); 
-    plat.print_random_val(&[1, 2, 3, 4, 5, 6, 7]);
+pub extern "sysv64" fn rust_start(rdi: *const ()) -> ! {
+    let mut plat = BareMetal::new();
+    writeln!(plat.logger(), "{:p}", rdi).unwrap();
+    for _ in 0..10 {
+        plat.print_random_val(&[1, 2, 3, 4, 5, 6, 7]);
+    }
+    panic!("STOP")
 }
 
 #[cfg(test)]

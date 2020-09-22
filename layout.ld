@@ -1,5 +1,3 @@
-ENTRY(rust64_start) 
-
 PHDRS
 {
   ram  PT_LOAD FILEHDR PHDRS ;

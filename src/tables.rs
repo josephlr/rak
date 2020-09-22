@@ -5,18 +5,24 @@ use x86_64::{
 
 const ADDRESS_SPACE_GIB: usize = 4;
 
-const L2_FLAGS: PageTableFlags = PageTableFlags::from_bits_truncate(PageTableFlags::PRESENT.bits() | PageTableFlags::WRITABLE.bits());
-const L3_FLAGS: PageTableFlags = PageTableFlags::from_bits_truncate(L2_FLAGS.bits() | PageTableFlags::HUGE_PAGE.bits());
+const RWP_FLAGS: PageTableFlags = PageTableFlags::from_bits_truncate(
+    PageTableFlags::PRESENT.bits() | PageTableFlags::WRITABLE.bits(),
+);
+const L2_FLAGS: PageTableFlags =
+    PageTableFlags::from_bits_truncate(RWP_FLAGS.bits() | PageTableFlags::HUGE_PAGE.bits());
 
 const fn make_huge_l2_tables(start: u64) -> [PageTable; ADDRESS_SPACE_GIB] {
     let mut l2s = [PageTable::new(); ADDRESS_SPACE_GIB];
     let mut addr = start;
+
     let mut i = 0;
     while i < ADDRESS_SPACE_GIB {
+        let l2 = &mut l2s[i];
+
         let mut j = 0;
-        let l2 = &mut l2s[j];
         while j < l2.entries.len() {
             let entry = &mut l2.entries[j];
+
             entry.set_addr(PhysAddr::new_truncate(addr), L2_FLAGS);
             addr += Size2MiB::SIZE;
             j += 1;
@@ -32,14 +38,17 @@ const fn make_higher_level_table(tables: &[PageTable]) -> PageTable {
     while j < tables.len() {
         let entry = &mut pt.entries[j];
         let addr: *const PageTable = &tables[j];
-        entry.set_addr(unsafe {PhysAddr::new_unsafe(addr) }, L3_FLAGS);
+        entry.set_addr(unsafe { PhysAddr::new_unsafe(addr) }, RWP_FLAGS);
         j += 1;
     }
     pt
 }
 
+#[link_section = ".l2"]
 static L2_PTS: [PageTable; ADDRESS_SPACE_GIB] = make_huge_l2_tables(0);
+#[link_section = ".l3"]
 static L3_PTS: [PageTable; 1] = [make_higher_level_table(&L2_PTS)];
+#[link_section = ".l4"]
 pub static L4_PTS: [PageTable; 1] = [make_higher_level_table(&L3_PTS)];
 
 use core::mem::size_of;
