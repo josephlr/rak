@@ -1,11 +1,11 @@
 #![cfg_attr(target_os = "none", no_std)]
 #![cfg_attr(target_os = "none", no_main)]
 #![cfg_attr(not(target_os = "none"), allow(unused_imports, dead_code))]
-#![feature(asm, naked_functions)]
+#![feature(llvm_asm, asm, naked_functions)]
 
 use core::{fmt::Write, panic::PanicInfo};
-use uart_16550::SerialPort;
 use rak::Plat;
+use uart_16550::SerialPort;
 
 /// Workaround for https://github.com/rust-lang/cargo/issues/6784
 /// Running "cargo test" or "cargo build" for the host target will try to build
@@ -43,8 +43,15 @@ impl Plat for BareMetal {
 pub extern "sysv64" fn rust_start(rdi: *const ()) -> ! {
     let mut plat = BareMetal::new();
     writeln!(plat.logger(), "{:p}", rdi).unwrap();
+    rak::paging::log_tables(&mut plat).unwrap();
+
+    #[no_mangle]
+    static mut WRITE: usize = 22;
+    unsafe { core::ptr::write_volatile(&mut WRITE, 1) };
+    rak::paging::log_tables(&mut plat).unwrap();
+
     for _ in 0..10 {
-        plat.print_random_val(&[1, 2, 3, 4, 5, 6, 7]);
+        rak::print_random_val(&mut plat, &[1, 2, 3, 4, 5, 6, 7]).unwrap();
     }
     panic!("STOP")
 }

@@ -1,6 +1,6 @@
 //! Test the public interface to the library
-use std::{io::{Stdout, stdout, Write}};
-use rak::Plat;
+use rak::{print_random_val, Plat};
+use std::io::{stdout, Stdout, Write};
 
 struct Hosted(Stdout);
 
@@ -28,5 +28,5 @@ impl Plat for Hosted {
 #[test]
 fn hosted_integration_test() {
     let mut plat = Hosted::new();
-    plat.print_random_val(&[42]);
+    print_random_val(&mut plat, &[42]).unwrap();
 }

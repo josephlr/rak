@@ -1,5 +1,4 @@
 use core::mem::size_of;
-use rak::tables::{GDT64_PTR, L4_PTS};
 use x86_64::registers::control::{Cr0Flags, Cr4Flags, EferFlags};
 
 const STACK_SIZE: usize = 1024 * 1024; // 1 MiB
@@ -15,17 +14,17 @@ unsafe extern "C" fn start32() -> ! {
         ".code32",
         // Setup the stack, and pass the PVH structure (ebx) as
         // the first sysv64 param (edi) to the Rust code.
-        "lea esp, [{esp_init}]",
+        "lea esp, [{stack_start} + {stack_size}]",
         "mov edi, ebx",
         // Setup our 64-bit GDT (not used until the long jump below)
-        "lgdt {gdt_init}",
-        // Load our static page tables
-        "lea eax, [{cr3_init}]",
-        "mov cr3, eax",
+        "lgdt [{gdt_init}]",
         // Set CR4.PAE (Physical Address Extension)
         "mov eax, cr4",
         "or eax, {pae}",
         "mov cr4, eax",
+        // Load our static page tables
+        "lea eax, [{cr3_init}]",
+        "mov cr3, eax",
         // Set EFER.LME (Long Mode Enable)
         "mov ecx, {efer}",
         "rdmsr",
@@ -38,11 +37,12 @@ unsafe extern "C" fn start32() -> ! {
         // Far return to 64-bit Rust code
         "ljmp {code_sel}, OFFSET {start64}",
         ".code64",
-        esp_init = sym STACK,
-        gdt_init = sym GDT64_PTR,
-        cr3_init = sym L4_PTS,
+        stack_start = sym STACK,
+        stack_size = const STACK_SIZE,
+        gdt_init = sym rak::gdt::GDT_PTR,
+        cr3_init = sym rak::paging::PML4,
         start64 = sym crate::rust_start,
-        code_sel = const 0x08u16,
+        code_sel = const rak::gdt::CS.0,
         efer = const 0xC0000080u32,
         pae = const Cr4Flags::PHYSICAL_ADDRESS_EXTENSION.bits(),
         lme = const EferFlags::LONG_MODE_ENABLE.bits(),
